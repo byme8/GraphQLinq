@@ -1,5 +1,8 @@
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -45,6 +48,9 @@ class Build : NukeBuild
     AbsolutePath Scaffolding => SourceDirectory / "GraphQLinq.Scaffolding";
     AbsolutePath ScaffoldingProjectFile => Scaffolding / "Scaffolding.csproj";
 
+    AbsolutePath StrawberryShakeClient => SourceDirectory / "GraphQLinq.TestServer.StrawberryShake.Client";
+    AbsolutePath StrawberryShakeClientSchema => StrawberryShakeClient / "schema.graphql";
+
     AbsolutePath OutputDirectory => RootDirectory / "output";
     AbsolutePath TestResultsDirectory => SourceDirectory / "TestResults";
 
@@ -75,13 +81,20 @@ class Build : NukeBuild
 
     Target GenerateClient => _ => _
         .DependsOn(Compile)
-        .Executes(() =>
+        .Executes(async () =>
         {
+            Process.GetProcessesByName(".TestServer").FirstOrDefault()?.Kill();
+
             DotNetBuild(o => o.SetProjectFile(TestServerProjectFile));
-            Task.Run(() => DotNetRun(o => o.SetProjectFile(TestServerProjectFile).EnableNoBuild()));
+            var server = Task.Run(() => DotNetRun(o => o.SetProjectFile(TestServerProjectFile).EnableNoBuild()));
             DotNetRun(o => o
                 .SetProjectFile(ScaffoldingProjectFile)
                 .SetApplicationArguments("http://localhost:10000/graphql -o ./GraphQLinq.Generated/TestServer -n TestServer"));
+
+            var httpClient = new HttpClient();
+            var schema = await httpClient.GetStringAsync("http://localhost:10000/graphql?sdl");
+
+            await File.WriteAllTextAsync(StrawberryShakeClientSchema, schema);
 
             Process.GetProcessesByName(".TestServer").FirstOrDefault()?.Kill();
         });
@@ -109,7 +122,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var projects = from project in ProjectsToPack
-                           select Solution.GetProject(project);
+                select Solution.GetProject(project);
 
             DotNetPack(s => s
                 .SetConfiguration("Release")

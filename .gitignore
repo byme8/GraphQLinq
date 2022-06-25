@@ -240,3 +240,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+src/GraphQLinq.Benchmark/BenchmarkDotNet.Artifacts/results/StrawberryShakeVSGraphQLinq-report.csv
+src/GraphQLinq.Benchmark/BenchmarkDotNet.Artifacts/results/StrawberryShakeVSGraphQLinq-report.html

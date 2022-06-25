@@ -9,7 +9,7 @@ namespace GraphQLinq.Tests
 {
     public class TestWithTestServer
     {
-        public const string TEST_SERVER_URL = "http://localhost:10000/graphql?sdl";
+        public const string TEST_SERVER_URL = "http://localhost:10000/graphql";
 
         public TestWithTestServer()
         {
@@ -25,23 +25,11 @@ namespace GraphQLinq.Tests
         public async Task RunSever()
         {
             var server = TestServer.Program.StartServer(Array.Empty<string>());
+            var serverIsRunning = await TestServer.Program.VerifyServerIsRunning();
 
-            var httpClient = new HttpClient();
-            for (int i = 0; i < 5; i++)
+            if (serverIsRunning)
             {
-                try
-                {
-                    var response = await httpClient.GetAsync(TEST_SERVER_URL);
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        return;
-                    }
-
-                    await Task.Delay(500);
-                }
-                catch
-                {
-                }
+                return;
             }
 
             Assert.Fail("Failed to run test graphql server.");

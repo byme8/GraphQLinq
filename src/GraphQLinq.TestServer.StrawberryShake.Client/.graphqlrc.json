@@ -1,0 +1,13 @@
+{
+  "schema": "schema.graphql",
+  "documents": "**/*.graphql",
+  "extensions": {
+    "strawberryShake": {
+      "name": "TestServerQLClient",
+      "namespace": "TestServer.StrawberryShake.Client",
+      "outputDirectoryName": "Generated",
+      "dependencyInjection": true,
+      "emitGeneratedCode": false
+    }
+  }
+}
