@@ -8,7 +8,8 @@ Apple M1, 1 CPU, 8 logical and 8 physical cores
 
 
 ```
-|          Method |     Mean |    Error |   StdDev |
-|---------------- |---------:|---------:|---------:|
-| StrawberryShake | 196.6 μs |  0.88 μs |  0.73 μs |
-|      GraphQLinq | 524.3 μs | 10.48 μs | 19.68 μs |
+|          Method |     Mean |   Error |  StdDev |
+|---------------- |---------:|--------:|--------:|
+|      RawRequest | 188.5 μs | 0.94 μs | 0.83 μs |
+| StrawberryShake | 195.7 μs | 0.80 μs | 0.74 μs |
+|      GraphQLinq | 514.2 μs | 1.41 μs | 1.25 μs |

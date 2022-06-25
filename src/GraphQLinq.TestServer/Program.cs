@@ -1,5 +1,6 @@
 using System.Net;
-namespace TestServer;
+
+namespace TestServer.Api;
 
 public class Program
 {
