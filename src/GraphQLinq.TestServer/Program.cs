@@ -2,9 +2,19 @@ namespace TestServer;
 
 public class Program
 {
-    public static CancellationTokenSource CancellationTokenSource = new();
-    
+    private static readonly CancellationTokenSource cancellationTokenSource = new();
+
     public static async Task Main(string[] args)
+    {
+        await StartServer(args);
+    }
+
+    public static void StopServer()
+    {
+        cancellationTokenSource.Cancel();
+    }
+
+    public static async Task StartServer(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +28,7 @@ public class Program
 
         app.MapGraphQL();
 
-        await app.RunAsync(CancellationTokenSource.Token);
+        await app.RunAsync(cancellationTokenSource.Token);
     }
 }
 

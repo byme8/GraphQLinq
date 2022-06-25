@@ -6,6 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GraphQLinq.Client\Client.csproj" />
     <ProjectReference Include="..\GraphQLinq.Generated\Generated.csproj" />
+    <ProjectReference Include="..\GraphQLinq.Scaffolding\Scaffolding.csproj" />
     <ProjectReference Include="..\GraphQLinq.TestServer\TestServer.csproj" />
   </ItemGroup>
   <ItemGroup>

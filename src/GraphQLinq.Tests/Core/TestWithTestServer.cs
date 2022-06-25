@@ -10,7 +10,7 @@ namespace GraphQLinq.Tests
     public class TestWithTestServer
     {
         public const string TEST_SERVER_URL = "http://localhost:10000/graphql?sdl";
-        
+
         public TestWithTestServer()
         {
             Context = new TestServer.QueryContext(HttpClientHelper.Create(TEST_SERVER_URL));
@@ -20,11 +20,11 @@ namespace GraphQLinq.Tests
         {
             get;
         }
-        
+
         [OneTimeSetUp]
         public async Task RunSever()
         {
-            var server = TestServer.Program.Main(Array.Empty<string>());
+            var server = TestServer.Program.StartServer(Array.Empty<string>());
 
             var httpClient = new HttpClient();
             for (int i = 0; i < 5; i++)
@@ -50,7 +50,7 @@ namespace GraphQLinq.Tests
         [OneTimeTearDown]
         public void StopServer()
         {
-            TestServer.Program.CancellationTokenSource.Cancel();
+            TestServer.Program.StopServer();
         }
 
     }
