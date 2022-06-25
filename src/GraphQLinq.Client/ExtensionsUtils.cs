@@ -63,6 +63,21 @@ namespace GraphQLinq
 
             if (type == typeof(int))
             {
+                return "Int!";
+            }
+
+            if (type == typeof(string))
+            {
+                return "String!";
+            }
+
+            if (type == typeof(float))
+            {
+                return "Float!";
+            }
+
+            if (type == typeof(int?))
+            {
                 return "Int";
             }
 
@@ -73,9 +88,9 @@ namespace GraphQLinq
 
             if (type == typeof(float))
             {
-                return "Float";
+                return "Float!";
             }
-
+            
             if (type.IsList())
             {
                 var listType = type.GetTypeOrListType();

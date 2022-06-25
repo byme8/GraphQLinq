@@ -9,12 +9,8 @@ namespace TestServer
     {
         public QueryContext(HttpClient httpClient) : base(httpClient)
         {
-        }
-
-        public GraphItemQuery<User> UserTemporaryFixForNullable(int? id)
-        {
-            var parameterValues = new object[] { id };
-            return BuildItemQuery<User>(parameterValues, "userTemporaryFixForNullable");
+            InputVariablesDefinition["user"] = "($id: Int!)";
+            InputVariablesDefinition["failUser"] = "()";
         }
 
         public GraphItemQuery<User> User(int id)

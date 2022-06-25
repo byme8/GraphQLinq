@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -22,6 +23,16 @@ namespace GraphQLinq.Scaffolding
                 return input;
             }
             return input.Substring(0, 1).ToUpper() + input.Substring(1);
+        }
+        
+        internal static string Join(this IEnumerable<string> input, string separator = ", ")
+        {
+            return string.Join(separator, input);
+        }
+        
+        internal static string Wrap(this string input, string left, string right)
+        {
+            return $"{left}{input}{right}";
         }
 
         internal static string NormalizeIfNeeded(this string input, CodeGenerationOptions options)

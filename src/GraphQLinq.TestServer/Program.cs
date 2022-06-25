@@ -30,15 +30,6 @@ public class Query
 [ExtendObjectType(typeof(Query))]
 public class UserGraphQLExtensions
 {
-    public User GetUserTemporaryFixForNullable(int? id)
-    {
-        return new User
-        {
-            FirstName = "Jon",
-            LastName = "Smith"
-        };
-    }
-    
     public User GetUser(int id)
     {
         return new User

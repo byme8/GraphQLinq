@@ -283,11 +283,24 @@ namespace GraphQLinq.Scaffolding
             var baseInitializer = ConstructorInitializer(SyntaxKind.BaseConstructorInitializer)
                 .AddArgumentListArguments(Argument(IdentifierName("httpClient")));
 
+
+            var inputVariablesInitializationStatements = queryInfo.Fields
+                .Select(field => new
+                {
+                    Name = field.Name,
+                    Args = field.Args
+                        .Select(arg => $"${arg.Name}: {MapType(arg)}")
+                        .Join()
+                        .Wrap("(", ")")
+                })
+                .Select(o => ParseStatement($@"{nameof(GraphContext.InputVariablesDefinition)}[""{o.Name}""] = ""{o.Args}"";{Environment.NewLine}"))
+                .ToArray();
+
             var constructorDeclaration = ConstructorDeclaration(className)
                 .AddModifiers(Token(SyntaxKind.PublicKeyword))
                 .AddParameterListParameters(Parameter(Identifier("httpClient")).WithType(ParseTypeName("HttpClient")))
                 .WithInitializer(baseInitializer)
-                .WithBody(Block());
+                .WithBody(Block(inputVariablesInitializationStatements));
 
             declaration = declaration.AddMembers(constructorDeclaration);
 
@@ -355,6 +368,17 @@ namespace GraphQLinq.Scaffolding
             return topLevelDeclaration;
         }
 
+        private string MapType(Arg arg)
+        {
+            switch (arg)
+            {
+                case { Type: { Kind: TypeKind.NonNull } }:
+                    return $"{arg.Type.OfType!.Name}!";
+            }
+
+            return arg.Type.Name ?? string.Empty;
+        }
+        
         private static bool NeedsNullable(Type? systemType, FieldType type)
         {
             if (systemType == null)

@@ -10,15 +10,21 @@ namespace GraphQLinq
 {
     public class GraphContext : IDisposable
     {
+        public GraphContext(HttpClient httpClient)
+        {
+            HttpClient = httpClient;
+            InputVariablesDefinition = new Dictionary<string, string>();
+            ContractResolver = new DefaultContractResolver();
+        }
+        
         public HttpClient HttpClient
         {
             get;
         }
 
-        public GraphContext(HttpClient httpClient)
+        public Dictionary<string, string> InputVariablesDefinition
         {
-            HttpClient = httpClient;
-            ContractResolver = new DefaultContractResolver();
+            get;
         }
 
         public IContractResolver ContractResolver { get; set; }

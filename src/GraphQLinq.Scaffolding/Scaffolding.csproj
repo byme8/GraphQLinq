@@ -49,4 +49,7 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GraphQLinq.Client\Client.csproj" />
+  </ItemGroup>
 </Project>

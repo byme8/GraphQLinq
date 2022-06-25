@@ -9,7 +9,7 @@ namespace GraphQLinq.Tests
         [Test]
         public async Task CanExecuteQuery()
         {
-            var user = await Context.UserTemporaryFixForNullable(42).ToItem();
+            var user = await Context.User(42).ToItem();
 
             Assert.Multiple(() =>
             {
@@ -25,9 +25,11 @@ namespace GraphQLinq.Tests
         }
 
         [Test]
-        public void NullableDoesntWork()
+        [TestCase("user", "($id: Int!)")]
+        [TestCase("failUser", "()")]
+        public void InputVariablesAreLoaded(string queryName, string variables)
         {
-            Assert.CatchAsync<GraphQueryExecutionException>(async () => await Context.User(42).ToItem());
+            Assert.AreEqual(Context.InputVariablesDefinition[queryName], variables);
         }
     }
 }

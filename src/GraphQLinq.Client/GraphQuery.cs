@@ -9,7 +9,6 @@ namespace GraphQLinq
 {
     public abstract class GraphQuery<T>
     {
-        private readonly GraphContext context;
         private readonly Lazy<GraphQLQuery> lazyQuery;
         private readonly GraphQueryBuilder<T> queryBuilder = new GraphQueryBuilder<T>();
 
@@ -21,10 +20,12 @@ namespace GraphQLinq
         internal GraphQuery(GraphContext graphContext, string queryName)
         {
             QueryName = queryName;
-            context = graphContext;
+            Context = graphContext;
 
             lazyQuery = new Lazy<GraphQLQuery>(() => queryBuilder.BuildQuery(this, Includes));
         }
+
+        public GraphContext Context { get; }
 
         public override string ToString()
         {
@@ -41,7 +42,7 @@ namespace GraphQLinq
             var genericArguments = GetType().GetGenericArguments();
             var cloneType = genericQueryType.MakeGenericType(typeof(TR), genericArguments[1]);
 
-            var instance = (GraphQuery<TR>)Activator.CreateInstance(cloneType, context, QueryName);
+            var instance = (GraphQuery<TR>)Activator.CreateInstance(cloneType, Context, QueryName);
 
             instance.Arguments = Arguments;
             instance.Selector = Selector;
@@ -164,7 +165,7 @@ namespace GraphQLinq
 
             var mapper = (Func<TSource, T>)Selector?.Compile();
 
-            return new GraphQueryExecutor<T, TSource>(context, query.FullQuery, queryType, mapper);
+            return new GraphQueryExecutor<T, TSource>(Context, query.FullQuery, queryType, mapper);
         }
     }
 
